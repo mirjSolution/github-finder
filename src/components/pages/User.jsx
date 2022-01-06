@@ -4,14 +4,18 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
 import GithubContext from '../../context/github/GithubContext';
+import RepoList from '../repos/RepoList';
 
 function User() {
-  const { getUser, user, loading } = useContext(GithubContext);
+  const { getUser, user, loading, getUserRepos, repos } =
+    useContext(GithubContext);
 
   const params = useParams();
 
   useEffect(() => {
     getUser(params.login);
+    getUserRepos(params.login);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -47,7 +51,7 @@ function User() {
           <div className='custom-card-image mb-6 md:mb-0'>
             <div className='rounded-lg shadow-xl card image-full'>
               <figure>
-                <img src={avatar_url} alt='' srcset='' />
+                <img src={avatar_url} alt='' />
               </figure>
               <div className='card-body justify-end'>
                 <h2 className='card-title mb-0'>{name}</h2>
@@ -128,7 +132,7 @@ function User() {
           </div>
           <div className='stat'>
             <div className='stat-figure text-secondary'>
-              <FaUsers className='text-3xl md:text-5xl' />
+              <FaUserFriends className='text-3xl md:text-5xl' />
             </div>
             <div className='stat-title'>Following</div>
             <div className='stat-value pr-5 text-3xl md:text-4xl'>
@@ -154,6 +158,7 @@ function User() {
             </div>
           </div>
         </div>
+        <RepoList repos={repos} />
       </div>
     </>
   );
